@@ -1,0 +1,34 @@
+{
+  "name": "virtualfit",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "postinstall": "npm --prefix server install",
+    "setup": "npm install",
+    "dev": "concurrently -k -n web,api -c cyan,yellow \"npm run dev:web\" \"npm run dev:server\"",
+    "dev:web": "vite",
+    "dev:server": "npm --prefix server run dev",
+    "dev:all": "npm run dev",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test:server": "npm --prefix server test",
+    "test": "node --test",
+    "analyze": "npm --prefix server run analyze --"
+  },
+  "dependencies": {
+    "@reduxjs/toolkit": "^2.5.0",
+    "axios": "^1.7.9",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-redux": "^9.2.0",
+    "react-router-dom": "^7.18.5"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.0.0",
+    "@vitejs/plugin-react": "^4.3.4",
+    "concurrently": "^9.1.0",
+    "tailwindcss": "^4.0.0",
+    "vite": "^6.0.0"
+  }
+}

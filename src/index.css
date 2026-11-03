@@ -1,0 +1,78 @@
+@import "tailwindcss";
+
+@theme {
+  --font-display: "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Instrument Sans", ui-sans-serif, system-ui, sans-serif;
+  --color-ink: #1b1f2a;
+  --color-tape: #f5c518;
+  --color-tape-soft: #fdf3c4;
+  --color-denim: #2f4b7c;
+  --color-fog: #f4f6f8;
+  --color-line: #e3e7ed;
+  --color-muted: #667085;
+  --color-ok: #2e7d5b;
+  --color-danger: #c0392b;
+}
+
+@layer base {
+  html { scroll-behavior: smooth; }
+  body {
+    @apply bg-fog font-sans text-ink antialiased;
+  }
+  h1, h2, h3, h4 { @apply font-display tracking-tight; }
+  :focus-visible {
+    outline: 2px solid var(--color-denim);
+    outline-offset: 2px;
+    border-radius: 6px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+/* The main call to action: a slow shine and a soft pulse. Both stop for people who prefer reduced motion. */
+.cta-glow {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(110deg, var(--color-tape) 0%, #ffe27a 45%, var(--color-tape) 90%);
+  color: var(--color-ink);
+  font-weight: 700;
+  animation: cta-pulse 2.6s ease-out infinite;
+  transition: transform 0.15s ease;
+}
+.cta-glow::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(100deg, transparent 30%, rgb(255 255 255 / 0.65) 50%, transparent 70%);
+  transform: translateX(-120%);
+  animation: cta-shine 3.2s ease-in-out infinite;
+  pointer-events: none;
+}
+.cta-glow:hover { transform: translateY(-1px) scale(1.02); }
+@keyframes cta-pulse {
+  0% { box-shadow: 0 0 0 0 rgb(245 197 24 / 0.55); }
+  70% { box-shadow: 0 0 0 14px rgb(245 197 24 / 0); }
+  100% { box-shadow: 0 0 0 0 rgb(245 197 24 / 0); }
+}
+@keyframes cta-shine {
+  0%, 55% { transform: translateX(-120%); }
+  100% { transform: translateX(120%); }
+}
+
+/* The link box on the home page: a border of slowly turning colour. */
+@property --angle { syntax: '<angle>'; initial-value: 0deg; inherits: false; }
+.hero-box {
+  border: 2px solid transparent;
+  background: linear-gradient(#fff, #fff) padding-box, conic-gradient(from var(--angle), var(--color-tape), var(--color-denim), var(--color-tape)) border-box;
+  animation: border-spin 7s linear infinite;
+}
+@keyframes border-spin { to { --angle: 360deg; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .cta-glow, .cta-glow::after, .hero-box { animation: none; }
+}
