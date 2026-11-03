@@ -4,7 +4,6 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "postinstall": "npm --prefix server install",
     "setup": "npm install",
     "dev": "concurrently -k -n web,api -c cyan,yellow \"npm run dev:web\" \"npm run dev:server\"",
     "dev:web": "vite",
