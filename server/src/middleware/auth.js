@@ -30,3 +30,43 @@ export function clearSession(res) {
   })
 }
 
+
+export function requireAuth(db) {
+  const findUser = db.prepare(
+    'SELECT id, name, email, password_hash, google_sub FROM users WHERE id = ?'
+  )
+
+  return (req, _res, next) => {
+    const token = req.cookies?.[config.cookieName]
+
+    if (!token) {
+      throw new HttpError(401, 'Please log in to continue.')
+    }
+
+    let payload
+
+    try {
+      payload = jwt.verify(token, config.jwtSecret, {
+        algorithms: ['HS256'],
+      })
+    } catch {
+      throw new HttpError(401, 'Your session has expired. Please log in again.')
+    }
+
+    const user = findUser.get(payload.sub)
+
+    if (!user) {
+      throw new HttpError(401, 'Your session has expired. Please log in again.')
+    }
+
+    req.user = {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      hasPassword: user.password_hash !== NO_PASSWORD,
+      google: Boolean(user.google_sub),
+    }
+
+    next()
+  }
+}
